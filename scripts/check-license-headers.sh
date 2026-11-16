@@ -48,8 +48,8 @@ EXCLUDED_PATHS=(
   '**/lib/forge-std/**'
   'ibc-solidity/lib/**'
 
-  # Docusaurus snapshots of the documentation as it stood at each past release. They are
-  # frozen copies, not edited in place, so they keep the terms they were published under.
+  # Docusaurus snapshots of the documentation at each past release. They keep the license
+  # their text was written under (see CONTRIBUTING.md), so they carry no header.
   'docs/versioned_docs/**'
 )
 
@@ -57,7 +57,7 @@ EXCLUDED_PATHS=(
 # license_for and must be left alone. Anything listed here is checked for *having* a
 # header, but its value is not forced.
 #
-# Deliberately empty: every file this repository owns follows CONTRIBUTING.md. This
+# Deliberately empty: every file this repository owns carries the license license_for assigns. This
 # stays as an escape hatch for future third-party code that cannot be relicensed -- add the
 # path together with a comment saying why, rather than weakening the check.
 PRESERVED_HEADERS=()
@@ -320,7 +320,7 @@ if ((status != 0)); then
   echo "If a file is intentionally licensed differently, add it to PRESERVED_HEADERS in" >&2
   echo "scripts/check-license-headers.sh with a comment explaining why." >&2
 else
-  echo "check-license-headers: all files carry the '${CODE_LICENSE}' or '${DOCS_LICENSE}' header"
+  echo "check-license-headers: every checked file carries the SPDX header its license requires"
 fi
 
 exit "${status}"
