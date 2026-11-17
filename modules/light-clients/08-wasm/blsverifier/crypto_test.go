@@ -14,6 +14,14 @@ import (
 	"github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11/blsverifier"
 )
 
+// The success vectors were checked against two independent implementations:
+// github.com/OffchainLabs/prysm/v6@v6.1.4 crypto/bls, which this package wrapped
+// before, and github.com/consensys/gnark-crypto. Both produce aggregatedPublicKey
+// from publicKeys and accept aggregatedSignature over message.
+//
+// The not-in-subgroup vectors are on-curve points outside the prime-order
+// subgroup (G1: x = 4, G2: x = 2), generated with gnark-crypto. They decode as
+// curve points, so only the subgroup checks reject them.
 var (
 	publicKeys = [][]byte{
 		mustDecodeHex("84fe268400062ae6255010a421204dad5b0a8bd93522a4abc023037fa7a769f6ef29acc14c7fae8c5c0cd1df21ae1f52"),
@@ -23,6 +31,9 @@ var (
 	aggregatedPublicKey = mustDecodeHex("912cf816853d0984e448f065d0bdb34b1e26be1d3c50bbc2f0d39b0ff1c2963a97b5dfd442a496763f3c6e5c54375b1e")
 	aggregatedSignature = mustDecodeHex("8af25b4a2786b3305f80528520544071a143e80ef4091dfca32e347eeabeef71eeb8673a78e8ff2875883ab5498d8a7b1888a80878bfd82c2d27e93ed74e979014e95d7f2ef55b1d28070a4a2e6ce9df3b8f07c6444c4799c64d654c2810c36d")
 	message             = [32]byte{3, 1, 2, 3}
+
+	g1NotInSubgroup = mustDecodeHex("800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004")
+	g2NotInSubgroup = mustDecodeHex("800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002")
 )
 
 func mustDecodeHex(s string) []byte {
@@ -59,6 +70,7 @@ func TestAggregatePublicKeys(t *testing.T) {
 		{"failure: wrong length", [][]byte{publicKeys[0][:47]}, nil, "public key must be 48 bytes"},
 		{"failure: not a curve point", [][]byte{make([]byte, 48)}, nil, "could not unmarshal bytes into public key"},
 		{"failure: point at infinity", [][]byte{infinityPoint(48)}, nil, "received an infinite public key"},
+		{"failure: point not in subgroup", [][]byte{g1NotInSubgroup}, nil, "received an infinite public key"},
 	}
 
 	for _, tc := range testCases {
@@ -69,7 +81,7 @@ func TestAggregatePublicKeys(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			require.Equal(t, tc.expected, pk.Marshal())
+			require.Equal(t, tc.expected, pk)
 		})
 	}
 }
@@ -89,6 +101,7 @@ func TestVerifySignature(t *testing.T) {
 		{"invalid: signature at infinity", infinityPoint(96), message, publicKeys, false, ""},
 		{"failure: wrong signature length", aggregatedSignature[:95], message, publicKeys, false, "signature must be 96 bytes"},
 		{"failure: signature not a curve point", make([]byte, 96), message, publicKeys, false, "could not unmarshal bytes into signature"},
+		{"failure: signature not in subgroup", g2NotInSubgroup, message, publicKeys, false, "signature not in group"},
 		{"invalid: keys cancel to infinity", infinityPoint(96), message, [][]byte{publicKeys[0], negate(publicKeys[0])}, false, ""},
 		{"failure: invalid public key", aggregatedSignature, message, [][]byte{infinityPoint(48)}, false, "failed to aggregate public keys"},
 	}

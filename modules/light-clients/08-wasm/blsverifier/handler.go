@@ -46,7 +46,7 @@ func CustomQuerier() func(sdk.Context, json.RawMessage) ([]byte, error) {
 				return nil, fmt.Errorf("failed to aggregate public keys %w", err)
 			}
 
-			return json.Marshal(aggregatedPublicKeys.Marshal())
+			return json.Marshal(aggregatedPublicKeys)
 		case customQuery.AggregateVerify != nil:
 			if len(customQuery.AggregateVerify.Message) != MessageSize {
 				return nil, fmt.Errorf("invalid message length (%d), must be a %d bytes hash: %x", len(customQuery.AggregateVerify.Message), MessageSize, customQuery.AggregateVerify.Message)
