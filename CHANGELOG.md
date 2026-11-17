@@ -52,11 +52,11 @@ Ref: https://keepachangelog.com/en/1.0.0/
 * [\#9011](https://github.com/cosmos/ibc-go/pull/9011) Bump **github.com/cosmos/cosmos-sdk** to **0.55.0**
 * [\#9011](https://github.com/cosmos/ibc-go/pull/9011) Bump **github.com/cometbft/cometbft** to **0.40.0**
 * [\#9011](https://github.com/cosmos/ibc-go/pull/9011) Bump **Go** to **1.26**
-* (light-clients/08-wasm) [\#XXXX](https://github.com/lfdt-ibc/ibc-go/pull/XXXX) Replace the GPL-3.0 **github.com/OffchainLabs/prysm/v6** with the Apache-2.0 **github.com/supranational/blst@v0.3.17** in `blsverifier`.
+* (light-clients/08-wasm) [\#9175](https://github.com/lfdt-ibc/ibc-go/pull/9175) Replace the GPL-3.0 **github.com/OffchainLabs/prysm/v6** with the Apache-2.0 **github.com/supranational/blst@v0.3.17** in `blsverifier`.
 
 ### API Breaking
 
-* (light-clients/08-wasm) [\#XXXX](https://github.com/lfdt-ibc/ibc-go/pull/XXXX) `blsverifier.AggregatePublicKeys` returns a `blsverifier.PublicKey` instead of a prysm `bls.PublicKey`. Callers that only use `Marshal()` are unaffected.
+* (light-clients/08-wasm) [\#9175](https://github.com/lfdt-ibc/ibc-go/pull/9175) `blsverifier.AggregatePublicKeys` returns a `blsverifier.PublicKey` instead of a prysm `bls.PublicKey`. Callers that only use `Marshal()` are unaffected.
 
 ### State Machine Breaking
 
