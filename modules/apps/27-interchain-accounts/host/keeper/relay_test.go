@@ -109,7 +109,7 @@ func (s *KeeperTestSuite) TestOnRecvPacket() {
 				interchainAccountAddr, found := s.chainB.GetSimApp().ICAHostKeeper.GetInterchainAccountAddress(s.chainB.GetContext(), ibctesting.FirstConnectionID, path.EndpointA.ChannelConfig.PortID)
 				s.Require().True(found)
 
-				validatorAddr := (sdk.ValAddress)(s.chainB.Vals.Validators[0].Address)
+				validatorAddr := sdk.ValAddress(s.chainB.Vals.Validators[0].Address)
 				msg := &stakingtypes.MsgDelegate{
 					DelegatorAddress: interchainAccountAddr,
 					ValidatorAddress: validatorAddr.String(),
@@ -137,7 +137,7 @@ func (s *KeeperTestSuite) TestOnRecvPacket() {
 				interchainAccountAddr, found := s.chainB.GetSimApp().ICAHostKeeper.GetInterchainAccountAddress(s.chainB.GetContext(), ibctesting.FirstConnectionID, path.EndpointA.ChannelConfig.PortID)
 				s.Require().True(found)
 
-				validatorAddr := (sdk.ValAddress)(s.chainB.Vals.Validators[0].Address)
+				validatorAddr := sdk.ValAddress(s.chainB.Vals.Validators[0].Address)
 				msgDelegate := &stakingtypes.MsgDelegate{
 					DelegatorAddress: interchainAccountAddr,
 					ValidatorAddress: validatorAddr.String(),
