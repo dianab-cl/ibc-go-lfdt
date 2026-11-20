@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-package blsverifier_test
+package blsverifier
 
 import (
 	"encoding/hex"
@@ -10,8 +10,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	"github.com/lfdt-ibc/ibc-go/modules/light-clients/08-wasm/v11/blsverifier"
 )
 
 // The success vectors were checked against two independent implementations:
@@ -75,7 +73,7 @@ func TestAggregatePublicKeys(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			pk, err := blsverifier.AggregatePublicKeys(tc.publicKeys)
+			pk, err := aggregatePublicKeys(tc.publicKeys)
 			if tc.expErrorMsg != "" {
 				require.ErrorContains(t, err, tc.expErrorMsg)
 				return
@@ -108,7 +106,7 @@ func TestVerifySignature(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			valid, err := blsverifier.VerifySignature(tc.signature, tc.message, tc.publicKeys)
+			valid, err := VerifySignature(tc.signature, tc.message, tc.publicKeys)
 			if tc.expErrorMsg != "" {
 				require.ErrorContains(t, err, tc.expErrorMsg)
 			} else {
@@ -120,10 +118,10 @@ func TestVerifySignature(t *testing.T) {
 }
 
 func TestCustomQuerier(t *testing.T) {
-	querier := blsverifier.CustomQuerier()
+	querier := CustomQuerier()
 
-	request, err := json.Marshal(blsverifier.CustomQuery{
-		Aggregate: &blsverifier.QueryAggregate{PublicKeys: publicKeys},
+	request, err := json.Marshal(CustomQuery{
+		Aggregate: &QueryAggregate{PublicKeys: publicKeys},
 	})
 	require.NoError(t, err)
 	res, err := querier(sdk.Context{}, request)
@@ -132,8 +130,8 @@ func TestCustomQuerier(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, expected, res)
 
-	request, err = json.Marshal(blsverifier.CustomQuery{
-		AggregateVerify: &blsverifier.QueryAggregateVerify{
+	request, err = json.Marshal(CustomQuery{
+		AggregateVerify: &QueryAggregateVerify{
 			PublicKeys: publicKeys,
 			Signature:  aggregatedSignature,
 			Message:    message[:],

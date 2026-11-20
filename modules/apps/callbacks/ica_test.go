@@ -188,7 +188,7 @@ func (s *CallbacksTestSuite) ExecuteICATimeout(icaAddress, memo string) {
 // buildICAMsgDelegatePacketData builds a packetData containing a stakingtypes.MsgDelegate to be executed on chainB
 func (s *CallbacksTestSuite) buildICAMsgDelegatePacketData(icaAddress string, memo string) icatypes.InterchainAccountPacketData {
 	// prepare a simple stakingtypes.MsgDelegate to be used as the interchain account msg executed on chainB
-	validatorAddr := sdk.ValAddress(s.chainB.Vals.Validators[0].Address)
+	validatorAddr := (sdk.ValAddress)(s.chainB.Vals.Validators[0].Address)
 	msgDelegate := &stakingtypes.MsgDelegate{
 		DelegatorAddress: icaAddress,
 		ValidatorAddress: validatorAddr.String(),

@@ -12,9 +12,9 @@ import (
 // dst is the Ethereum consensus proof-of-possession ciphersuite domain separation tag.
 var dst = []byte("BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_POP_")
 
-// AggregatePublicKeys validates the compressed public keys and returns their compressed aggregate.
-func AggregatePublicKeys(publicKeys [][]byte) ([]byte, error) {
-	pk, err := aggregatePublicKeys(publicKeys)
+// aggregatePublicKeys validates the compressed public keys and returns their compressed aggregate.
+func aggregatePublicKeys(publicKeys [][]byte) ([]byte, error) {
+	pk, err := aggregatePublicKeyPoint(publicKeys)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +23,7 @@ func AggregatePublicKeys(publicKeys [][]byte) ([]byte, error) {
 
 // VerifySignature verifies a compressed signature over message against the aggregate of publicKeys.
 func VerifySignature(signature []byte, message [32]byte, publicKeys [][]byte) (bool, error) {
-	pk, err := aggregatePublicKeys(publicKeys)
+	pk, err := aggregatePublicKeyPoint(publicKeys)
 	if err != nil {
 		return false, fmt.Errorf("failed to aggregate public keys %w", err)
 	}
@@ -44,7 +44,7 @@ func VerifySignature(signature []byte, message [32]byte, publicKeys [][]byte) (b
 	return sig.Verify(false, pk, false, message[:], dst), nil
 }
 
-func aggregatePublicKeys(publicKeys [][]byte) (*blst.P1Affine, error) {
+func aggregatePublicKeyPoint(publicKeys [][]byte) (*blst.P1Affine, error) {
 	if len(publicKeys) == 0 {
 		return nil, errors.New("nil or empty public keys")
 	}

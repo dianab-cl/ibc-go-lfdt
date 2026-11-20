@@ -56,7 +56,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ### API Breaking
 
-* (light-clients/08-wasm) [\#9175](https://github.com/lfdt-ibc/ibc-go/pull/9175) `blsverifier.AggregatePublicKeys` returns compressed public key bytes as `[]byte` instead of a prysm `bls.PublicKey`. Callers must use the returned bytes directly instead of calling `Marshal()`.
+* (light-clients/08-wasm) [\#9175](https://github.com/lfdt-ibc/ibc-go/pull/9175) Unexport `blsverifier.AggregatePublicKeys`, which returned a prysm `bls.PublicKey`. Use the `Aggregate` query of `blsverifier.CustomQuerier` instead.
 
 ### State Machine Breaking
 

@@ -41,7 +41,7 @@ func CustomQuerier() func(sdk.Context, json.RawMessage) ([]byte, error) {
 
 		switch {
 		case customQuery.Aggregate != nil:
-			aggregatedPublicKeys, err := AggregatePublicKeys(customQuery.Aggregate.PublicKeys)
+			aggregatedPublicKeys, err := aggregatePublicKeys(customQuery.Aggregate.PublicKeys)
 			if err != nil {
 				return nil, fmt.Errorf("failed to aggregate public keys %w", err)
 			}
